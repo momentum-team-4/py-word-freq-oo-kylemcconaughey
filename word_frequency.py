@@ -28,8 +28,7 @@ class WordList:
         is responsible for lowercasing all words and stripping
         them of punctuation.
         """
-        self.allWords = self.text.lower().replace('—', ' ').replace(':', ' ').replace(
-            ',', ' ').replace('.', ' ').replace('/n', ' ').replace('"', ' ').split()
+        self.allWords = filter(str.isalpha, self.text.lower().split())
 
         return self.allWords
 
