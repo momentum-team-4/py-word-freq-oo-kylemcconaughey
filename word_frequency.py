@@ -32,8 +32,6 @@ class WordList:
 
         return self.allWords
 
-        # print(f"allWords: {self.allWords}")
-
     def remove_stop_words(self):
         """
         Removes all stop words from our word list. Expected to
@@ -41,7 +39,7 @@ class WordList:
         """
         self.wordList = [
             word for word in self.allWords if word not in STOP_WORDS]
-        # print(f"self.wordList = {self.wordList}")
+
         return self.wordList
 
     def get_freqs(self):
@@ -57,7 +55,7 @@ class WordList:
                 self.wordDict[word] += 1
             else:
                 self.wordDict[word] = 1
-        # print(f"wordDict: {self.wordDict}")
+
         return self.wordDict
 
 
