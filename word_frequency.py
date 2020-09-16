@@ -7,19 +7,21 @@ STOP_WORDS = [
 
 class FileReader:
     def __init__(self, filename):
-        pass
+        self.filename = filename
 
-    def read_contents(self):
+    def read_contents(self, filename):
         """
         This should read all the contents of the file
         and return them as one string.
         """
-        raise NotImplementedError("FileReader.read_contents")
+        with open(filename, 'rt') as infile:
+            self.blob = infile.read()
+        return self.blob
 
 
 class WordList:
     def __init__(self, text):
-        pass
+        self.text = text
 
     def extract_words(self):
         """
@@ -27,14 +29,22 @@ class WordList:
         is responsible for lowercasing all words and stripping
         them of punctuation.
         """
-        raise NotImplementedError("WordList.extract_words")
+        self.allWords = self.text.lower().replace('—', ' ').replace(':', ' ').replace(
+            ',', ' ').replace('.', ' ').replace('/n', ' ').replace('"', ' ').split()
+
+        return self.allWords
+
+        # print(f"allWords: {self.allWords}")
 
     def remove_stop_words(self):
         """
         Removes all stop words from our word list. Expected to
         be run after extract_words.
         """
-        raise NotImplementedError("WordList.remove_stop_words")
+        self.wordList = [
+            word for word in self.allWords if word not in STOP_WORDS]
+        # print(f"self.wordList = {self.wordList}")
+        return self.wordList
 
     def get_freqs(self):
         """
@@ -43,12 +53,19 @@ class WordList:
         extract_words and remove_stop_words. The data structure
         could be a dictionary or another type of object.
         """
-        raise NotImplementedError("WordList.get_freqs")
+        self.wordDict = {}
+        for word in self.wordList:
+            if word in self.wordDict.keys():
+                self.wordDict[word] += 1
+            else:
+                self.wordDict[word] = 1
+        # print(f"wordDict: {self.wordDict}")
+        return self.wordDict
 
 
 class FreqPrinter:
     def __init__(self, freqs):
-        pass
+        self.freqs = freqs
 
     def print_freqs(self):
         """
@@ -67,7 +84,11 @@ class FreqPrinter:
        rights | 6    ******
         right | 6    ******
         """
-        raise NotImplementedError("FreqPrinter.print_freqs")
+        result = reversed((sorted(self.freqs, key=self.freqs.get)))
+        width = max([len(el) for el in self.freqs])
+        for el in result:
+            print(
+                f"{el:>{width}}  |  {self.freqs[el]:>2} {'*' * self.freqs[el]}")
 
 
 if __name__ == "__main__":
@@ -83,7 +104,7 @@ if __name__ == "__main__":
     file = Path(args.file)
     if file.is_file():
         reader = FileReader(file)
-        word_list = WordList(reader.read_contents())
+        word_list = WordList(reader.read_contents(file))
         word_list.extract_words()
         word_list.remove_stop_words()
         printer = FreqPrinter(word_list.get_freqs())
