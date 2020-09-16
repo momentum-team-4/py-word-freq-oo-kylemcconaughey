@@ -15,8 +15,7 @@ class FileReader:
         and return them as one string.
         """
         with open(filename, 'rt') as infile:
-            self.blob = infile.read()
-        return self.blob
+            return infile.read()
 
 
 class WordList:
